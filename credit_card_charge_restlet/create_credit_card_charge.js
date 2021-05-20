@@ -35,19 +35,17 @@ function (record) {
         log.debug(record.Type.CREDIT_CARD_CHARGE);
         var creditCardCharge = record.create({
             type: record.Type.CREDIT_CARD_CHARGE,
-            isDynamic: true,
-            defaultValues: {
-                entity: requestBody.entity.internalId
-            }
+            isDynamic: true
         });
 
+        creditCardCharge.setValue({ fieldId: 'entity', value: requestBody.entity.internalId });
+        creditCardCharge.setValue({ fieldId: 'subsidiary', value: requestBody.subsidiary.internalId });
+        creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId });
         creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
-        creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId })
-        creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId })
-        creditCardCharge.setValue({ fieldId: 'subsidiary', value: requestBody.subsidiary.internalId })
-        creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId })
-        creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo })
-        creditCardCharge.setValue({ fieldId: 'externalid', value: requestBody.externalId })
+        creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId });
+        creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
+        creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo });
+        creditCardCharge.setValue({ fieldId: 'externalid', value: requestBody.externalId });
 
 
         creditCardCharge.selectNewLine({
@@ -61,7 +59,7 @@ function (record) {
             creditCardCharge.setCurrentSublistValue({
                 sublistId: 'expense',
                 fieldId: 'account',
-                value: expense.account
+                value: expense.account.internalId
             });
 
             creditCardCharge.setCurrentSublistValue({
@@ -119,17 +117,11 @@ function (record) {
             });
 
         });
+        log.debug('ccc_charge', creditCardCharge);
+        var id = creditCardCharge.save({});
+        log.debug('record save with id', id);
 
-        try {
-            var id = creditCardCharge.save({
-                ignoreMandatoryFields: false
-            });
-            log.debug('record save with id', id);
-
-            return { internalId: id, success: true };
-        } catch (e) {
-            return { success: false, type: e.type, name: e.name, message: e.message };
-        }
+        return { internalId: id, success: true };
     }
 
     return {

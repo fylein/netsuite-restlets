@@ -26,13 +26,13 @@ oauth = OAuth1Session(
 )
 
 payload = {
-    'externalId': 'test-payload-7',
+    'externalId': 'test-payload-17',
     'tranDate': '5/10/2021',
     'account': {
-        'internalId': 129
+        'internalId': 213
     },
     'entity': {
-        'internalId': 3
+        'internalId': 7588
     },
     'currency': {
         'internalId': 1
@@ -46,7 +46,9 @@ payload = {
     'memo': 'Transaction created through RESTlet',
     'expenses': [
         {
-            'account': 82,
+            'account': {
+                'internalId': 82
+            },
             'amount': 2025.09,
             'memo': 'This is payload test',
             'department': {
@@ -82,7 +84,9 @@ payload = {
             ]
         },
         {
-            'account': 82,
+            'account': {
+                'internalId': 82
+            },
             'amount': 35.11,
             'memo': 'Second Lineitem',
             'department': {
@@ -122,4 +126,5 @@ payload = {
 
 resp = oauth.post(url, headers={'Content-Type': 'application/json'}, data=json.dumps(payload))
 
+print(resp.status_code)
 print(json.loads(resp.text))

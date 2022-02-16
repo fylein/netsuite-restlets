@@ -3,6 +3,7 @@ NetSuite Suite Script examples along with a python script to run them
 
 ### List of Restlets -
 * Create Credit Card Charge
+* Create Credit Card Refund
 
 ### How to run -
 * Go to the folder `credit_card_charge_restlet`

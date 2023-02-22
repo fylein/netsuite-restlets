@@ -42,6 +42,7 @@ function (record) {
         creditCardCharge.setValue({ fieldId: 'subsidiary', value: requestBody.subsidiary.internalId });
         creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId });
         creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
+        creditCardCharge.setValue({ fieldId: 'tranid', value: requestBody.tranid });
         creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId });
         creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
         creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo });

@@ -42,7 +42,9 @@ function (record) {
         creditCardRefund.setValue({ fieldId: 'subsidiary', value: requestBody.subsidiary.internalId });
         creditCardRefund.setValue({ fieldId: 'account', value: requestBody.account.internalId });
         creditCardRefund.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
+        creditCardRefund.setValue({ fieldId: 'tranid', value: requestBody.tranid })
         creditCardRefund.setValue({ fieldId: 'location', value: requestBody.location.internalId });
+        creditCardRefund.setValue({ fieldId: 'department', value: requestBody.department.internalId });
         creditCardRefund.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
         creditCardRefund.setValue({ fieldId: 'memo', value: requestBody.memo });
         creditCardRefund.setValue({ fieldId: 'externalid', value: requestBody.externalId });

@@ -106,6 +106,18 @@ function (record) {
                 value: expense.isBillable
             });
 
+            creditCardRefund.setCurrentSublistValue({
+                sublistId: 'expense',
+                fieldId: 'taxcode',
+                value: expense.taxCode.internalId
+            });
+
+            creditCardRefund.setCurrentSublistValue({
+                sublistId: 'expense',
+                fieldId: 'taxamount',
+                value: expense.taxAmount
+            });
+
             expense.customFieldList.forEach(function (customField) {
                 creditCardRefund.setCurrentSublistValue({
                     sublistId: 'expense',

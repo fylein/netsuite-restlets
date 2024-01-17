@@ -105,6 +105,18 @@ function (record) {
                 value: expense.isBillable
             });
 
+            creditCardCharge.setCurrentSublistValue({
+                sublistId: 'expense',
+                fieldId: 'taxcode',
+                value: expense.taxCode.internalId
+            });
+
+            creditCardCharge.setCurrentSublistValue({
+                sublistId: 'expense',
+                fieldId: 'taxamount',
+                value: expense.taxAmount
+            });
+
             expense.customFieldList.forEach(function (customField) {
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',

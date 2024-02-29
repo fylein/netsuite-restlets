@@ -44,6 +44,8 @@ function (record) {
         creditCardRefund.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
         creditCardRefund.setValue({ fieldId: 'tranid', value: requestBody.tranid });
         creditCardRefund.setValue({ fieldId: 'location', value: requestBody.location.internalId });
+        creditCardCharge.setValue({ fieldId: 'department', value: requestBody.department.internalId });
+        creditCardCharge.setValue({ fieldId: 'class', value: requestBody.class.internalId });
         creditCardRefund.setValue({ fieldId: 'department', value: requestBody.department.internalId });
         creditCardRefund.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
         creditCardRefund.setValue({ fieldId: 'memo', value: requestBody.memo });

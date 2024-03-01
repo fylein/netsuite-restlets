@@ -3,15 +3,15 @@ import json
 from requests_oauthlib import OAuth1Session
 
 # Token Based Authentication Details
-account = os.environ.get('ACCOUNT')
-consumer_key = os.environ.get('CONSUMER_KEY')
-consumer_secret = os.environ.get('CONSUMER_SECRET')
-token_key = os.environ.get('TOKEN_KEY')
-token_secret = os.environ.get('TOKEN_SECRET')
+account = "TSTDRV2089588"
+consumer_key = "2b23f95f44777eeab873c06adbc1c672efd5ee86a626c3c926f8eeec3463e1ab"
+consumer_secret = "9a5c059b60a82c3119a38bba140b980f8cf19ea2134b5c4b60a88b25120f8912"
+token_key = "8c869cf39844a15f38a73d374d1fb0aa28e9ff39618b660498f9dbcb835808f5"
+token_secret = "0ae3c188a4894633a2ee4eacf226ec42f6c5f48ccb2f3469ce5895d06b7c3114"
 
 # RESTlet Details
-script_id = os.environ.get('RESTLET_SCRIPT_ID')
-deployment_id = os.environ.get('RESTLET_DEPLOYMENT_ID')
+script_id = "customscript_cc_charge_fyle"
+deployment_id = "customdeploy_cc_charge_fyle"
 
 url = f"https://{account.lower()}.restlets.api.netsuite.com/app/site/hosting/restlet.nl?" \
       f"script={script_id}&deploy={deployment_id}"
@@ -26,7 +26,7 @@ oauth = OAuth1Session(
 )
 
 payload = {
-    'externalId': 'test-payload-17',
+    'externalId': 'test-payload-1839',
     'tranDate': '5/10/2021',
     'account': {
         'internalId': 213
@@ -43,7 +43,7 @@ payload = {
     'location': {
         'internalId': 1
     },
-    'memo': 'Transaction created through RESTlet',
+    'memo': 'Transaction created through RESTlet 2022',
     'expenses': [
         {
             'account': {
@@ -62,26 +62,11 @@ payload = {
                 'internalId': 1
             },
             'customer': {
-                'internalId': 1397
+                'internalId': None
             },
             'isBillable': False,
             "customFieldList": [
-                {
-                    "scriptId": "custcolfyle_receipt_link",
-                    "value": "https://www.google.com"
-                },
-                {
-                    "scriptId": "custcolfyle_expense_url",
-                    "value": "https://www.gmail.com"
-                },
-                {
-                    "scriptId": "custcol780",
-                    "value": 3
-                },
-                {
-                    'scriptId': 'custcol785',
-                    'value': 1
-                }
+               
             ]
         },
         {
@@ -100,26 +85,11 @@ payload = {
                 'internalId': 1
             },
             'customer': {
-                'internalId': 1612
+                'internalId': None
             },
             'isBillable': False,
             "customFieldList": [
-                {
-                    "scriptId": "custcolfyle_receipt_link",
-                    "value": "https://www.google.com"
-                },
-                {
-                    "scriptId": "custcolfyle_expense_url",
-                    "value": "https://www.gmail.com"
-                },
-                {
-                    "scriptId": "custcol780",
-                    "value": 1
-                },
-                {
-                    'scriptId': 'custcol785',
-                    'value': 2
-                }
+               
             ]
         }
     ]

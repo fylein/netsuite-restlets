@@ -102,7 +102,16 @@ define(['N/record'], function (record) {
                 isDynamic: true
             });
 
+            creditCardCharge.setValue({ fieldId: 'entity', value: requestBody.entity.internalId });
+            creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId });
+            creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
+            creditCardCharge.setValue({ fieldId: 'tranid', value: requestBody.tranid });
+            creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId });
+            creditCardCharge.setValue({ fieldId: 'department', value: requestBody.department.internalId });
+            creditCardCharge.setValue({ fieldId: 'class', value: requestBody.class.internalId });
+            creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
             creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo });
+            creditCardCharge.setValue({ fieldId: 'externalid', value: requestBody.externalId });
 
             // First, remove existing expense lines
             var expenseLineCount = creditCardCharge.getLineCount({ sublistId: 'expense' });

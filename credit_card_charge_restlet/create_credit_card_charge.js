@@ -3,22 +3,9 @@
  * @NScriptType Restlet
  * @NModuleScope Public
  */
-define(['N/record'],
-/**
- * @param {record} record
- */
-function (record) {
-    /**
-     * Function called upon sending a POST request to the RESTlet.
-     *
-     * @param {string | Object} requestBody - The HTTP request body; request body will be passed into function as a
-     * string when request Content-Type is 'text/plain'
-     * or parsed into an Object when request Content-Type is 'application/json'
-     * (in which case the body must be a valid JSON)
-     * @returns {string | Object} HTTP response body; return string when request Content-Type is 'text/plain';
-     * return Object when request Content-Type is 'application/json'
-     * @since 2015.2
-     */
+define(['N/record'], function (record) {
+
+    // Function called upon sending a POST request to create a new credit card charge record
     function doPost(requestBody) {
         var creditCardCharge = CreateNetSuiteCreditCardCharge(requestBody);
         if (creditCardCharge.success) {
@@ -27,6 +14,184 @@ function (record) {
         } else {
             log.debug('CCC', 'Fail');
             return creditCardCharge;
+        }
+    }
+
+    // Function called upon sending a GET request to retrieve a record
+    function doGet(requestParams) {
+        try {
+            // Load the credit card charge record in dynamic mode
+            var creditCardCharge = record.load({
+                type: record.Type.CREDIT_CARD_CHARGE,
+                id: requestParams.internalId,
+                isDynamic: true
+            });
+    
+            // Prepare the response object with all relevant fields
+            var response = {
+                internalId: creditCardCharge.id,
+                entity: creditCardCharge.getValue('entity'),
+                subsidiary: creditCardCharge.getValue('subsidiary'),
+                account: creditCardCharge.getValue('account'),
+                memo: creditCardCharge.getValue('memo'),
+                trandate: creditCardCharge.getValue('trandate'),
+                tranid: creditCardCharge.getValue('tranid'),
+                location: creditCardCharge.getValue('location'),
+                department: creditCardCharge.getValue('department'),
+                class: creditCardCharge.getValue('class'),
+                currency: creditCardCharge.getValue('currency'),
+                externalid: creditCardCharge.getValue('externalid'),
+                expenses: []
+            };
+    
+            // Fetch the expense sublist lines
+            var lineCount = creditCardCharge.getLineCount({ sublistId: 'expense' });
+            for (var i = 0; i < lineCount; i++) {
+                var expense = {
+                    account: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'account', line: i }),
+                    amount: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'amount', line: i }),
+                    memo: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'memo', line: i }),
+                    department: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'department', line: i }),
+                    class: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'class', line: i }),
+                    location: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'location', line: i }),
+                    customer: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'customer', line: i }),
+                    isBillable: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'isBillable', line: i }),
+                    taxCode: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'taxcode', line: i }),
+                    taxAmount: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'taxamount', line: i }),
+                    customFields: {
+                        custcolfyle_receipt_link: creditCardCharge.getSublistValue({
+                            sublistId: 'expense',
+                            fieldId: 'custcolfyle_receipt_link',
+                            line: i
+                        }),
+                        custcolfyle_receipt_link_2: creditCardCharge.getSublistValue({
+                            sublistId: 'expense',
+                            fieldId: 'custcolfyle_receipt_link_2',
+                            line: i
+                        }),
+                        custcolfyle_expense_url: creditCardCharge.getSublistValue({
+                            sublistId: 'expense',
+                            fieldId: 'custcolfyle_expense_url',
+                            line: i
+                        }),
+                        custcolfyle_expense_url_2: creditCardCharge.getSublistValue({
+                            sublistId: 'expense',
+                            fieldId: 'custcolfyle_expense_url_2',
+                            line: i
+                        })
+                    }
+                };
+    
+                // Push the expense object to the response
+                response.expenses.push(expense);
+            }
+    
+            return response;
+        } catch (e) {
+            log.error('Error in doGet', e);
+            return { success: false, message: e.message };
+        }
+    }    
+
+    // Function called upon sending a PUT request to update a record
+    function doPut(requestBody) {
+        try {
+            var creditCardCharge = record.load({
+                type: record.Type.CREDIT_CARD_CHARGE,
+                id: requestBody.internalId,
+                isDynamic: true
+            });
+
+            creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo });
+
+            // First, remove existing expense lines
+            var expenseLineCount = creditCardCharge.getLineCount({ sublistId: 'expense' });
+            for (var i = expenseLineCount - 1; i >= 0; i--) {
+                creditCardCharge.removeLine({ sublistId: 'expense', line: i });
+            }
+
+            // Add the new expense lines
+            var expenses = requestBody.expenses;
+            expenses.forEach(function (expense) {
+                creditCardCharge.selectNewLine({ sublistId: 'expense' });
+
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'account',
+                    value: expense.account.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'amount',
+                    value: expense.amount
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'memo',
+                    value: expense.memo
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'department',
+                    value: expense.department.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'class',
+                    value: expense.class.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'location',
+                    value: expense.location.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'customer',
+                    value: expense.customer.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'isbillable',
+                    value: expense.isBillable
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxcode',
+                    value: expense.taxCode.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxamount',
+                    value: expense.taxAmount
+                });
+    
+                expense.customFieldList.forEach(function (customField) {
+                    creditCardCharge.setCurrentSublistValue({
+                        sublistId: 'expense',
+                        fieldId: customField.scriptId,
+                        value: customField.value
+                    });
+                });
+
+                creditCardCharge.commitLine({ sublistId: 'expense' });
+            });
+
+            var id = creditCardCharge.save();
+            return { internalId: id, success: true };
+
+        } catch (e) {
+            log.error('Error in doPut', e);
+            return { success: false, message: e.message };
         }
     }
 
@@ -139,8 +304,11 @@ function (record) {
         return { internalId: id, success: true };
     }
 
+    // Return the RESTlet methods for each HTTP method
     return {
+        'get': doGet,
         'post': doPost,
+        'put': doPut
     };
 
 });

@@ -42,17 +42,17 @@ define(['N/record'], function (record) {
                 id: requestBody.internalId,
                 isDynamic: true
             });
-
-            creditCardCharge.setValue({ fieldId: 'entity', value: requestBody.entity.internalId });
-            creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId });
-            creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) });
-            creditCardCharge.setValue({ fieldId: 'tranid', value: requestBody.tranid });
-            creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId });
-            creditCardCharge.setValue({ fieldId: 'department', value: requestBody.department.internalId });
-            creditCardCharge.setValue({ fieldId: 'class', value: requestBody.class.internalId });
-            creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId });
-            creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo });
-            creditCardCharge.setValue({ fieldId: 'externalid', value: requestBody.externalId });
+            
+            if (requestBody.entity) { creditCardCharge.setValue({ fieldId: 'entity', value: requestBody.entity.internalId }); }
+            if (requestBody.account) { creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId }); }
+            if (requestBody.tranDate) {creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) }); }
+            if (requestBody.tranid) { creditCardCharge.setValue({ fieldId: 'tranid', value: requestBody.tranid }); }
+            if (requestBody.location) { creditCardCharge.setValue({ fieldId: 'location', value: requestBody.location.internalId }); }
+            if (requestBody.department) { creditCardCharge.setValue({ fieldId: 'department', value: requestBody.department.internalId }); }
+            if (requestBody.class) { creditCardCharge.setValue({ fieldId: 'class', value: requestBody.class.internalId }); }
+            if (requestBody.currency) { creditCardCharge.setValue({ fieldId: 'currency', value: requestBody.currency.internalId }); }
+            if (requestBody.memo) { creditCardCharge.setValue({ fieldId: 'memo', value: requestBody.memo }); }
+            if (requestBody.externalId) { creditCardCharge.setValue({ fieldId: 'externalid', value: requestBody.externalId }); }
 
             // First, remove existing expense lines
             var expenseLineCount = creditCardCharge.getLineCount({ sublistId: 'expense' });
@@ -65,73 +65,22 @@ define(['N/record'], function (record) {
             expenses.forEach(function (expense) {
                 creditCardCharge.selectNewLine({ sublistId: 'expense' });
 
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'account',
-                    value: expense.account.internalId
-                });
+                if (expense.account) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'account', value: expense.account.internalId }); }
+                if (expense.amount) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'amount', value: expense.amount }); }
+                if (expense.memo) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'memo', value: expense.memo }); }
+                if (expense.department) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'department', value: expense.department.internalId }); }
+                if (expense.class) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'class', value: expense.class.internalId }); }
+                if (expense.location) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'location', value: expense.location.internalId }); }
+                if (expense.customer) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'customer', value: expense.customer.internalId }); }
+                if (expense.isBillable) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'isbillable', value: expense.isBillable }); }
+                if (expense.taxCode) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxcode', value: expense.taxCode.internalId }); }
+                if (expense.taxAmount) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxamount', value: expense.taxAmount }); }
     
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'amount',
-                    value: expense.amount
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'memo',
-                    value: expense.memo
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'department',
-                    value: expense.department.internalId
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'class',
-                    value: expense.class.internalId
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'location',
-                    value: expense.location.internalId
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'customer',
-                    value: expense.customer.internalId
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'isbillable',
-                    value: expense.isBillable
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'taxcode',
-                    value: expense.taxCode.internalId
-                });
-    
-                creditCardCharge.setCurrentSublistValue({
-                    sublistId: 'expense',
-                    fieldId: 'taxamount',
-                    value: expense.taxAmount
-                });
-    
-                expense.customFieldList.forEach(function (customField) {
-                    creditCardCharge.setCurrentSublistValue({
-                        sublistId: 'expense',
-                        fieldId: customField.scriptId,
-                        value: customField.value
+                if (expense.customFieldList) {
+                    expense.customFieldList.forEach(function (customField) {
+                        creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: customField.scriptId, value: customField.value });
                     });
-                });
+                }
 
                 creditCardCharge.commitLine({ sublistId: 'expense' });
             });

@@ -27,66 +27,7 @@ define(['N/record'], function (record) {
                 isDynamic: true
             });
     
-            // Prepare the response object with all relevant fields
-            var response = {
-                internalId: creditCardCharge.id,
-                entity: creditCardCharge.getValue('entity'),
-                subsidiary: creditCardCharge.getValue('subsidiary'),
-                account: creditCardCharge.getValue('account'),
-                memo: creditCardCharge.getValue('memo'),
-                trandate: creditCardCharge.getValue('trandate'),
-                tranid: creditCardCharge.getValue('tranid'),
-                location: creditCardCharge.getValue('location'),
-                department: creditCardCharge.getValue('department'),
-                class: creditCardCharge.getValue('class'),
-                currency: creditCardCharge.getValue('currency'),
-                externalid: creditCardCharge.getValue('externalid'),
-                expenses: []
-            };
-    
-            // Fetch the expense sublist lines
-            var lineCount = creditCardCharge.getLineCount({ sublistId: 'expense' });
-            for (var i = 0; i < lineCount; i++) {
-                var expense = {
-                    account: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'account', line: i }),
-                    amount: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'amount', line: i }),
-                    memo: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'memo', line: i }),
-                    department: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'department', line: i }),
-                    class: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'class', line: i }),
-                    location: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'location', line: i }),
-                    customer: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'customer', line: i }),
-                    isBillable: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'isBillable', line: i }),
-                    taxCode: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'taxcode', line: i }),
-                    taxAmount: creditCardCharge.getSublistValue({ sublistId: 'expense', fieldId: 'taxamount', line: i }),
-                    customFields: {
-                        custcolfyle_receipt_link: creditCardCharge.getSublistValue({
-                            sublistId: 'expense',
-                            fieldId: 'custcolfyle_receipt_link',
-                            line: i
-                        }),
-                        custcolfyle_receipt_link_2: creditCardCharge.getSublistValue({
-                            sublistId: 'expense',
-                            fieldId: 'custcolfyle_receipt_link_2',
-                            line: i
-                        }),
-                        custcolfyle_expense_url: creditCardCharge.getSublistValue({
-                            sublistId: 'expense',
-                            fieldId: 'custcolfyle_expense_url',
-                            line: i
-                        }),
-                        custcolfyle_expense_url_2: creditCardCharge.getSublistValue({
-                            sublistId: 'expense',
-                            fieldId: 'custcolfyle_expense_url_2',
-                            line: i
-                        })
-                    }
-                };
-    
-                // Push the expense object to the response
-                response.expenses.push(expense);
-            }
-    
-            return response;
+            return creditCardCharge;
         } catch (e) {
             log.error('Error in doGet', e);
             return { success: false, message: e.message };

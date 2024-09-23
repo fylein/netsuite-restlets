@@ -65,22 +65,73 @@ define(['N/record'], function (record) {
             expenses.forEach(function (expense) {
                 creditCardRefund.selectNewLine({ sublistId: 'expense' });
 
-                if (expense.account) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'account', value: expense.account.internalId }); }
-                if (expense.amount) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'amount', value: expense.amount }); }
-                if (expense.memo) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'memo', value: expense.memo }); }
-                if (expense.department) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'department', value: expense.department.internalId }); }
-                if (expense.class) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'class', value: expense.class.internalId }); }
-                if (expense.location) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'location', value: expense.location.internalId }); }
-                if (expense.customer) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'customer', value: expense.customer.internalId }); }
-                if (expense.isBillable) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'isbillable', value: expense.isBillable }); }
-                if (expense.taxCode) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxcode', value: expense.taxCode.internalId }); }
-                if (expense.taxAmount) { creditCardRefund.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxamount', value: expense.taxAmount }); }
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'account',
+                    value: expense.account.internalId
+                });
 
-                if (expense.customFieldList) {
-                    expense.customFieldList.forEach(function (customField) {
-                        creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: customField.scriptId, value: customField.value });
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'amount',
+                    value: expense.amount
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'memo',
+                    value: expense.memo
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'department',
+                    value: expense.department.internalId
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'class',
+                    value: expense.class.internalId
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'location',
+                    value: expense.location.internalId
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'customer',
+                    value: expense.customer.internalId
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'isbillable',
+                    value: expense.isBillable
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxcode',
+                    value: expense.taxCode.internalId
+                });
+
+                creditCardRefund.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxamount',
+                    value: expense.taxAmount
+                });
+
+                expense.customFieldList.forEach(function (customField) {
+                    creditCardRefund.setCurrentSublistValue({
+                        sublistId: 'expense',
+                        fieldId: customField.scriptId,
+                        value: customField.value
                     });
-                }
+                });
 
                 creditCardRefund.commitLine({ sublistId: 'expense' });
             });

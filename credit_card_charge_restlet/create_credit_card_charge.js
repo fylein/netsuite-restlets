@@ -65,22 +65,73 @@ define(['N/record'], function (record) {
             expenses.forEach(function (expense) {
                 creditCardCharge.selectNewLine({ sublistId: 'expense' });
 
-                if (expense.account) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'account', value: expense.account.internalId }); }
-                if (expense.amount) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'amount', value: expense.amount }); }
-                if (expense.memo) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'memo', value: expense.memo }); }
-                if (expense.department) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'department', value: expense.department.internalId }); }
-                if (expense.class) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'class', value: expense.class.internalId }); }
-                if (expense.location) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'location', value: expense.location.internalId }); }
-                if (expense.customer) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'customer', value: expense.customer.internalId }); }
-                if (expense.isBillable) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'isbillable', value: expense.isBillable }); }
-                if (expense.taxCode) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxcode', value: expense.taxCode.internalId }); }
-                if (expense.taxAmount) { creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: 'taxamount', value: expense.taxAmount }); }
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'account',
+                    value: expense.account.internalId
+                });
     
-                if (expense.customFieldList) {
-                    expense.customFieldList.forEach(function (customField) {
-                        creditCardCharge.setCurrentSublistValue({ sublistId: 'expense', fieldId: customField.scriptId, value: customField.value });
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'amount',
+                    value: expense.amount
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'memo',
+                    value: expense.memo
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'department',
+                    value: expense.department.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'class',
+                    value: expense.class.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'location',
+                    value: expense.location.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'customer',
+                    value: expense.customer.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'isbillable',
+                    value: expense.isBillable
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxcode',
+                    value: expense.taxCode.internalId
+                });
+    
+                creditCardCharge.setCurrentSublistValue({
+                    sublistId: 'expense',
+                    fieldId: 'taxamount',
+                    value: expense.taxAmount
+                });
+    
+                expense.customFieldList.forEach(function (customField) {
+                    creditCardCharge.setCurrentSublistValue({
+                        sublistId: 'expense',
+                        fieldId: customField.scriptId,
+                        value: customField.value
                     });
-                }
+                });
 
                 creditCardCharge.commitLine({ sublistId: 'expense' });
             });

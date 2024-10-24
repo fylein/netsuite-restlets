@@ -3,7 +3,7 @@
  * @NScriptType Restlet
  * @NModuleScope Public
  */
-define(['N/record'], function (record) {
+define(['N/record', 'N/search'], function (record, search) {
 
     // Function called upon sending a POST request to create a new credit card charge record
     function doPost(requestBody) {
@@ -17,22 +17,61 @@ define(['N/record'], function (record) {
         }
     }
 
-    // Function called upon sending a GET request to retrieve a record
+    // Function called upon sending a GET request to retrieve a record and system notes
     function doGet(requestParams) {
         try {
-            // Load the credit card charge record in dynamic mode
             var creditCardCharge = record.load({
                 type: record.Type.CREDIT_CARD_CHARGE,
                 id: requestParams.internalId,
                 isDynamic: true
             });
-    
-            return creditCardCharge;
+
+            var systemNotes = getSystemNotes(requestParams);
+
+            return {
+                creditCardCharge: creditCardCharge,
+                systemNotes: systemNotes
+            }
         } catch (e) {
             log.error('Error in doGet', e);
             return { success: false, message: e.message };
         }
-    }    
+    }
+    
+    // Function to get system notes for a specific record
+    function getSystemNotes(params) {
+        var systemNotesSearch = search.create({
+            type: record.Type.CREDIT_CARD_CHARGE, // Adjust based on record type, could be 'customer', etc.
+            filters: [
+                ['internalid', 'is', params.internalId],
+                'AND',
+                ['systemnotes.date', 'onorafter', params.fromDate || '1/1/2018'] // Adjust default date as needed
+            ],
+            columns: [
+                search.createColumn({ name: 'date', join: 'systemNotes' }),
+                search.createColumn({ name: 'field', join: 'systemNotes' }),
+                search.createColumn({ name: 'newvalue', join: 'systemNotes' }),
+                search.createColumn({ name: 'oldvalue', join: 'systemNotes' }),
+                search.createColumn({ name: 'context', join: 'systemNotes' }),
+                search.createColumn({ name: 'name', join: 'systemNotes' }) // Correct column for 'set by'
+            ]
+        });
+    
+        var searchResults = [];
+        systemNotesSearch.run().each(function (result) {
+            searchResults.push({
+                Date: result.getValue({ name: 'date', join: 'systemNotes' }),
+                Field: result.getValue({ name: 'field', join: 'systemNotes' }),
+                NewValue: result.getValue({ name: 'newvalue', join: 'systemNotes' }),
+                OldValue: result.getValue({ name: 'oldvalue', join: 'systemNotes' }),
+                Context: result.getValue({ name: 'context', join: 'systemNotes' }),
+                SetBy: result.getText({ name: 'name', join: 'systemNotes' }) // Use 'name' for the user who made the change
+            });
+            return true; // Continue the search
+        });
+    
+        return searchResults;
+    }
 
     // Function called upon sending a PUT request to update a record
     function doPut(requestBody) {
@@ -42,7 +81,7 @@ define(['N/record'], function (record) {
                 id: requestBody.internalId,
                 isDynamic: true
             });
-            
+
             if (requestBody.entity) { creditCardCharge.setValue({ fieldId: 'entity', value: requestBody.entity.internalId }); }
             if (requestBody.account) { creditCardCharge.setValue({ fieldId: 'account', value: requestBody.account.internalId }); }
             if (requestBody.tranDate) {creditCardCharge.setValue({ fieldId: 'trandate', value: new Date(requestBody.tranDate) }); }
@@ -70,61 +109,61 @@ define(['N/record'], function (record) {
                     fieldId: 'account',
                     value: expense.account.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'amount',
                     value: expense.amount
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'memo',
                     value: expense.memo
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'department',
                     value: expense.department.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'class',
                     value: expense.class.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'location',
                     value: expense.location.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'customer',
                     value: expense.customer.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'isbillable',
                     value: expense.isBillable
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'taxcode',
                     value: expense.taxCode.internalId
                 });
-    
+
                 creditCardCharge.setCurrentSublistValue({
                     sublistId: 'expense',
                     fieldId: 'taxamount',
                     value: expense.taxAmount
                 });
-    
+
                 expense.customFieldList.forEach(function (customField) {
                     creditCardCharge.setCurrentSublistValue({
                         sublistId: 'expense',
@@ -170,8 +209,7 @@ define(['N/record'], function (record) {
             sublistId: 'expense'
         });
 
-
-        var expenses = requestBody.expenses
+        var expenses = requestBody.expenses;
 
         expenses.forEach(function (expense) {
             creditCardCharge.setCurrentSublistValue({

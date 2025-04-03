@@ -1,7 +1,6 @@
 import os
 import json
 from requests_oauthlib import OAuth1Session
-
 # Token Based Authentication Details
 account = os.environ.get('ACCOUNT')
 consumer_key = os.environ.get('CONSUMER_KEY')
